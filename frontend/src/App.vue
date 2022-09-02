@@ -22,22 +22,19 @@
                         group
                     </span>
                 </v-toolbar-title>
+                <span v-if="urlPath!=null" 
+                    class="mdi mdi-home" 
+                    key="" 
+                    to="/" 
+                    @click="goHome()"
+                    style="margin-left:10px; font-size:20px; cursor:pointer;"
+                    ></span> 
                 <v-spacer></v-spacer>
+
             </v-app-bar>
 
             <v-navigation-drawer app clipped flat v-model="sideBar">
                 <v-list>
-
-
-                    <v-list-item
-                        class="px-2"
-                        key="orders"
-                        to="/orders"
-                        color="deep-purple lighten-2"
-                        style="font-weight:700;"
-                    >
-                        Order
-                    </v-list-item>
 
 
 
@@ -47,25 +44,36 @@
         </div>
 
         <v-main>
-            <v-container class="py-8 px-6" fluid>
+            <v-container v-if="urlPath" class="py-8 px-6 mt-10" fluid>
                 <router-view></router-view>
+            </v-container>
+            <v-container v-else class="py-8 px-6 mt-10" fluid>
+                <v-row>
+
+                </v-row>
             </v-container>
         </v-main>
     </v-app>
 </template>
 
 <script>
+
 export default {
     name: "App",
-
-    components: {},
 
     data: () => ({
         useComponent: "",
         drawer: true,
         components: [],
         sideBar: true,
+        urlPath: null,
     }),
+    
+    async created() {
+      var path = document.location.href.split("#/")
+      this.urlPath = path[1];
+
+    },
 
     mounted() {
         var me = this;
@@ -75,7 +83,14 @@ export default {
     methods: {
         openSideBar(){
             this.sideBar = !this.sideBar
-        }
+        },
+        changeUrl() {
+            var path = document.location.href.split("#/")
+            this.urlPath = path[1];
+        },
+        goHome() {
+            this.urlPath = null;
+        },
     }
 };
 </script>
